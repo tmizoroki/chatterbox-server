@@ -48,7 +48,8 @@ describe('server', function() {
   });
 
   it('should respond with messages that were previously posted', function(done) {
-    var requestParams = {method: 'POST',
+    var requestParams = {
+      method: 'POST',
       uri: 'http://127.0.0.1:3000/classes/messages',
       json: {
         username: 'Jono',
