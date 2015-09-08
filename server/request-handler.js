@@ -36,32 +36,34 @@ var requestHandler = function(request, response) {
 
   // The outgoing status.
   var statusCode;
-
-  if (request.url === '/classes/messages') {
-    statusCode = 200;
-  } else {
-    statusCode = 404;
-  }
   var aggregatedData = '';
 
+  // POST REQUEST
   if (request.method === 'POST') {
-    statusCode = 201;
+    if (request.url === '/classes/messages' || request.url === '/classes/room1') {
+      statusCode = 201;
+    } else {
+      statusCode = 404;
+    }
+
     request.on('data', function(data) {
       aggregatedData += data; 
     });
 
-
     request.on('end', function() {
-      console.log("aggregatedData: " + aggregatedData);
+      //console.log("aggregatedData: " + aggregatedData);
       // aggregatedData = JSON.parse(aggregatedData);
       endObject.results.push(JSON.parse(aggregatedData));
 
       aggregatedData = '';
     });
 
-  } else {
-    if (request.url === '/classes/room1') {
+  // GET REQUEST
+  } else if (request.method === 'GET') {
+    if (request.url === '/classes/messages' || request.url === '/classes/room1') {
       statusCode = 200;
+    } else {
+      statusCode = 404;
     }
   }
 
@@ -72,7 +74,7 @@ var requestHandler = function(request, response) {
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "application/json";
   response.writeHead(statusCode, headers);
-  console.log("not parsed before it's pushed : " + endObject.results[0]);
+  //console.log("not parsed before it's pushed : " + endObject.results[0]);
   response.end(JSON.stringify(endObject));
 
 
