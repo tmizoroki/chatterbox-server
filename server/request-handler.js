@@ -1,7 +1,8 @@
 
 var parseURL = require("url");
-
-var messagesCollection = {results: [{username: 'Tomio', text: 'I was right all along, suckers!'}]};
+// The silly objects
+var msgCount = 0;
+var messagesCollection = {results: [{username: 'Tomio', text: 'I was right all along, suckers!', objectId: 0}]};
 
 var requestHandler = function(request, response) {
 
@@ -38,8 +39,9 @@ var requestHandler = function(request, response) {
     request.on('end', function() {
       var pendingMessageObject = JSON.parse(aggregatedData);
       pendingMessageObject.createdAt = Date.now();
+      pendingMessageObject.objectId = ++msgCount;
       messagesCollection.results.push(pendingMessageObject);
-
+      sortByCreatedAt(messagesCollection.results);
       aggregatedData = '';
     });
   // GET REQUEST
@@ -58,17 +60,11 @@ var requestHandler = function(request, response) {
   response.writeHead(statusCode, headers);
   response.end(JSON.stringify(messagesCollection));
 
-  // var sortByCreatedAt = function (messagesArray) {
-  //   messagesArray.sort(function(a, b) {
-  //     return a.createdAt - b.createdAt;
-  //   });
-  // }
-
-  // // if there is a url extension and it is asking us to order the messages by createdAt
-  // if(request.url === "/classes/?order=-createdAt") {
-  //   // run a sorting method on messagesCollection
-  //   sortByCreatedAt(messagesCollection.results)
-  // }
+  var sortByCreatedAt = function (messagesArray) {
+    return messagesArray.sort(function(a, b) {
+      return b.objectId - a.objectId;
+    });
+  }
 
 };
 
