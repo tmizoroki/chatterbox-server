@@ -7,6 +7,7 @@ var ip = "127.0.0.1";
 
 var server = http.createServer(importHandler.requestHandler);
 console.log("Listening on http://" + ip + ":" + port);
+
 server.listen(port, ip);
 
 // Every server needs to listen on a port with a unique number. The
