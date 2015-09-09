@@ -3,7 +3,7 @@ var app = {
 
   //TODO: The current 'addFriend' function just adds the class 'friend'
   //to all messages sent by the user
-  server: 'https://api.parse.com/1/classes/chatterbox/',
+  server: 'http://127.0.0.1:3000/classes/',
   username: 'anonymous',
   roomname: 'lobby',
   lastMessageId: 0,
@@ -45,6 +45,7 @@ var app = {
       data: JSON.stringify(data),
       contentType: 'application/json',
       success: function (data) {
+        console.log('message sent!');
         // Trigger a fetch to update the messages, pass true to animate
         app.fetch();
       },
@@ -62,6 +63,7 @@ var app = {
       data: { order: '-createdAt'},
       success: function(data) {
         // Don't bother if we have nothing to work with
+        console.log(data);
         if (!data.results || !data.results.length) { return; }
 
         // Get the last message
@@ -217,7 +219,7 @@ var app = {
       text: app.$message.val(),
       roomname: app.roomname || 'lobby'
     };
-
+    console.log(message);
     app.send(message);
 
     // Stop the form from submitting
